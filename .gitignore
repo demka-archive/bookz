@@ -1,0 +1,6 @@
+*.pdf
+*.svg
+*.yml
+*.DS_Store
+UWRITE/chromedriver
+*.pyc
