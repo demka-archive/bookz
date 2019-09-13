@@ -4,3 +4,4 @@
 *.DS_Store
 UWRITE/chromedriver
 *.pyc
+ZNANIUM/chromedriver
