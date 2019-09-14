@@ -6,6 +6,8 @@ import time
 class SeleniumClass(object):
 
     def __init__(self):
+
+        self.driver = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__))+"/chromedriver")
         self.browser()
         #self.main_url = settings["MAIN_URL"]
         #self.book_url = settings["BOOK_URL"]
@@ -15,16 +17,30 @@ class SeleniumClass(object):
         #self.RESULT_COOKIES = ""
         #self.RESULT_URL = ""
 
+    def download_pdf(self):
+        #Пытаемся скачать PDF с меню справа
+        driver = self.driver
+        try:
+            download_menu = driver.find_element_by_xpath('/html/body/div[1]/div[7]/div[3]/a/span')
+            download_menu.click()
+
+            time.sleep(1)
+            download_pdf = driver.find_element_by_xpath('html/body/div[18]/div[2]/div/div/ul[1]/li[3]/div/span')
+            download_pdf.click()
+        except:
+            print("Не нашёл элементы скачивания, кажется мы не залогинены")
+
+
     def browser(self):
 
-        driver = webdriver.Chrome(os.path.dirname(os.path.abspath(__file__))+"/chromedriver")
+        driver = self.driver
+        
         driver.get("https://znanium.com")
         time.sleep(1)
 
         button = driver.find_element_by_xpath('//*[@id="loginButton"]')
         button.click()
-
-        time.sleep(5)
+        time.sleep(1)
 
         #ID абонента
         userid_element = driver.find_element_by_xpath('//*[@id="abonent_id"]')
@@ -48,12 +64,22 @@ class SeleniumClass(object):
         login_element = driver.find_element_by_xpath('//*[@id="okButton"]')
         login_element.click()
 
-        time.sleep(10)
+        time.sleep(1)
 
         driver.get("http://znanium.com/bookread2.php?book=851215")
 
-        #Меню скачивания
-        #/html/body/div[1]/div[7]/div[3]/a/span
+        time.sleep(2)
+        total_pages = int(driver.find_element_by_xpath('//*[@id="total_pages"]').text)
+        print(total_pages)
+        pagenum = 1
+        while pagenum != total_pages:
+            self.download_pdf()
+            pagenum_element = driver.find_element_by_xpath('//*[@id="gopagenum"]')
+            pagenum_element.click()
+            pagenum_element.clear()
+            pagenum_element.send_keys(str(pagenum)+u'\ue007')
+            pagenum += 1
+            time.sleep(2)
         #
 
         #Скачивание PDF
