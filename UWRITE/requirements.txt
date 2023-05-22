@@ -1,4 +1,4 @@
-requests==2.22.0
+requests==2.31.0
 PyPDF2==1.26.0
 svglib==0.9.4
 reportlab==3.5.23
